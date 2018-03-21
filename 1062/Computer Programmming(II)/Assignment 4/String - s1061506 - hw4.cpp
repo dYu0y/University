@@ -88,7 +88,7 @@ string::string( const char *s, size_t n )
 
 string& string::operator=( const string &str )
 {
-   return str.size() ? assign(&str[0], str.size()) : erase(); // to avoid str.size() == 0 and str[0] would out of range
+   return str.size() ? assign(&str[0], str.size()) : resize(0); // to avoid str.size() == 0 and str[0] would out of range
 }
 
 void string::resize( size_t n )
