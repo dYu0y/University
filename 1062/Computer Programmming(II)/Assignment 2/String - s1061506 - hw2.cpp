@@ -5,13 +5,6 @@ using std::cerr;
 
 #include "String.h" // string class definition
 
-#define minRes (sizeof(bx) - 1) // (sizeof(bx) / sizeof(char) - 1)
-
-static void copy(char const* begin, char const* end, char* out) //  std::copy exploded QQ
-{
-	for (; begin != end;)	*out++ = *begin++;
-}
-
 string::string()
 {
    bx.buf[ 0 ] = '\0';
@@ -33,19 +26,6 @@ string::string( const string &str )
    }
 }
 
-string::string( const char *s, unsigned int n )
-{
-	resize(n);
-
-	if (myRes == minRes)
-	{
-		copy(s, s + n, bx.buf);
-		std::fill(bx.buf + mySize, bx.buf + myRes + 1, char());
-	}
-	else
-		copy(s, s + n, bx.ptr);
-}
-
 string::~string()
 {
    if( myRes > 15 )
@@ -62,29 +42,6 @@ unsigned int string::capacity() const
    return myRes;
 }
 
-void string::resize( unsigned int n )
-{
-	char* str = (myRes != minRes) ? bx.ptr : bx.buf;
-
-	if (myRes < n)
-	{
-		auto cap = std::_Max_value(myRes + myRes / 2, n | 15);
-		
-		char* tmp = new char[cap + 1]();
-		copy(str, str + mySize, tmp);
-
-		if (str == bx.ptr)
-			delete[] bx.ptr;
-		
-		myRes = cap;
-		bx.ptr = tmp;
-	}
-	else if(mySize < n)
-		std::fill(str + mySize, str + n, char());
-	
-	mySize = n;
-}
-
 void string::clear()
 {
    mySize = 0;
@@ -94,49 +51,10 @@ void string::clear()
       bx.ptr[ 0 ] = '\0';
 }
 
-void string::push_back( char c )
-{
-   if (mySize == myRes)
-        resize(mySize + 1);
-   else
-        ++mySize;
-    
-   ((myRes != minRes) ? bx.ptr : bx.buf)[mySize - 1] = c;
-}
-
 void string::pop_back()
 {
    if( mySize > 0 )
       --mySize;
-}
-
-string& string::assign( const char *s, unsigned int n )
-{
-	resize(n);
-	
-	char* str = (myRes != minRes) ? bx.ptr : bx.buf;
-	
-	copy(s, s + n, str);	// now I think "str0.assign(&str0[0], n);" is safe if not out of range
-	
-   return *this;
-}
-
-string& string::erase( unsigned int pos, unsigned int len )
-{
-	if (pos < mySize)
-	{
-		char* str = (myRes != minRes) ? bx.ptr : bx.buf;
-		if (mySize < pos + len || len == npos)
-			len = mySize - pos;
-		else
-			copy(str + pos + len, str + mySize, str + pos);
-
-		std::fill(str + mySize - len, str + mySize, char());
-
-		mySize -= len;
-	}
-
-	return *this;
 }
 
 unsigned int string::find( char c, unsigned int pos ) const
@@ -194,6 +112,90 @@ bool string::equal( std::string const &str )
    }
 
    return true;
+}
+
+// start here
+
+#define minRes (sizeof(bx) - 1) // (sizeof(bx) / sizeof(char) - 1)
+
+static void copy(char const* begin, char const* end, char* out) //  std::copy exploded QQ
+{
+	for (; begin != end;)	*out++ = *begin++;
+}
+
+string::string( const char *s, unsigned int n )
+{
+	resize(n);
+
+	if (myRes == minRes)
+	{
+		copy(s, s + n, bx.buf);
+		std::fill(bx.buf + mySize, bx.buf + myRes + 1, char());
+	}
+	else
+		copy(s, s + n, bx.ptr);
+}
+
+void string::resize( unsigned int n )
+{
+	char* str = (myRes != minRes) ? bx.ptr : bx.buf;
+
+	if (myRes < n)
+	{
+		auto cap = std::_Max_value(myRes + myRes / 2, n | 15);
+		
+		char* tmp = new char[cap + 1]();
+		copy(str, str + mySize, tmp);
+
+		if (str == bx.ptr)
+			delete[] bx.ptr;
+		
+		myRes = cap;
+		bx.ptr = tmp;
+	}
+	else if(mySize < n)
+		std::fill(str + mySize, str + n, char());
+	
+	mySize = n;
+}
+
+void string::push_back( char c )
+{
+   if (mySize == myRes)
+        resize(mySize + 1);
+   else
+        ++mySize;
+    
+   ((myRes != minRes) ? bx.ptr : bx.buf)[mySize - 1] = c;
+}
+
+string& string::assign( const char *s, unsigned int n )
+{
+	resize(n);
+	
+	char* str = (myRes != minRes) ? bx.ptr : bx.buf;
+	
+	copy(s, s + n, str);	// now I think "str0.assign(&str0[0], n);" is safe if not out of range
+	
+	return *this;
+}
+
+string& string::erase( unsigned int pos, unsigned int len )
+{
+	if (pos < mySize)
+	{
+		char* str = (myRes != minRes) ? bx.ptr : bx.buf;
+		if (mySize < pos + len || len == npos)
+			len = mySize - pos;
+		else
+			copy(str + pos + len, str + mySize, str + pos);
+
+		std::fill(str + mySize - len, str + mySize, char());
+
+		mySize -= len;
+	}
+
+	return *this;
 }
 
 #undef minRes
