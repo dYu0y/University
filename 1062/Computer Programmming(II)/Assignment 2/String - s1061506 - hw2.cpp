@@ -188,7 +188,7 @@ string string::substr(unsigned int pos, unsigned int len) const
 {
 	if (pos < mySize)
 	{
-		if (mySize < pos + len)
+		if (mySize - pos < len)
 			len = mySize - pos;
 
 		char const* str = (myRes != minRes) ? bx.ptr : bx.buf;
