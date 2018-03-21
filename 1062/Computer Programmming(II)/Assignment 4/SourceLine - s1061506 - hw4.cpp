@@ -16,9 +16,12 @@ void SourceLine::assign( const char *s, size_t n )
 }
 
 // start here
+// delStrConst  會刪到//後的""
+// delCharConst 會刪到//後及""內的''
+//              先放置
 
-// avoid [cout << "this is what a comment is like:\"// a comment\"\n";]
-//                                                  ^
+// avoid [cout << "a comment:\"// a comment\"\n";]
+//                             ^
 void SourceLine::delComments()
 {
    auto pos { 0u }, size = sourceLine.size();
