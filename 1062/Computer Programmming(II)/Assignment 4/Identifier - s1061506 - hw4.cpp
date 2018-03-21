@@ -48,7 +48,7 @@ bool Identifier::keyword()
    int i;
    static bool uninitialized { true };
    static string keywords[keywordNum];
-   if (uninitialized) {
+   if (uninitialized) { // static特性使得這個block只會執行一次, 避免重複建立暫存物件
       for (i = 0; i < keywordNum; ++i)
          keywords[i] = string(::keywords[i], strlen(::keywords[i]));
       uninitialized = false;
