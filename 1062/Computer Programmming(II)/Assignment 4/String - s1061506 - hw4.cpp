@@ -121,8 +121,7 @@ const char& string::operator[]( size_t pos ) const
 string& string::assign( const char *s, size_t n )
 {
    resize(n);
-   for (auto it = begin(); it != end();)
-      *it++ = *s++;
+   std::copy(s, s + n, begin());
    return *this;
 }
 
