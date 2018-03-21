@@ -128,8 +128,8 @@ string& string::assign( const char *s, size_t n )
 
 string& string::erase( size_t pos, size_t len)
 {
-   if (len && pos < size()) {
-      if (len == npos || len > size() - pos)
+   if (len && pos < size()) { // 當pos > size() 時, 運算 size() - pos 會因為結果應為負數, 但是unsigned是沒負數的而導致出錯
+      if (len > size() - pos) // when len == npos, len + pos would overflow
          len = size() - pos;
       std::copy(begin()+pos+len, end(), begin()+pos);
       mySize -= len;
