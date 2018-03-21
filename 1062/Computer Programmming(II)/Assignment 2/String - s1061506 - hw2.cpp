@@ -76,20 +76,6 @@ unsigned int string::find( char c, unsigned int pos ) const
    return npos;
 }
 
-string string::substr(unsigned int pos, unsigned int len) const
-{
-	if (pos < mySize)
-	{
-		if (mySize < pos + len)
-			len = mySize - pos;
-
-		char const* str = (myRes != minRes) ? bx.ptr : bx.buf;
-
-		return string(str + pos, len);
-	}
-	return string();
-}
-
 bool string::equal( std::string const &str )
 {
    if( myRes != str.capacity() )
@@ -196,6 +182,20 @@ string& string::erase( unsigned int pos, unsigned int len )
 	}
 
 	return *this;
+}
+
+string string::substr(unsigned int pos, unsigned int len) const
+{
+	if (pos < mySize)
+	{
+		if (mySize < pos + len)
+			len = mySize - pos;
+
+		char const* str = (myRes != minRes) ? bx.ptr : bx.buf;
+
+		return string(str + pos, len);
+	}
+	return string();
 }
 
 #undef minRes
