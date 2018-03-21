@@ -126,7 +126,7 @@ void HugeInteger::output( ostream &outFile )
    outFile << endl;
 } // end function output
 
-
+// start here
 
 bool HugeInteger::equal( const HugeInteger &right ) const
 {
