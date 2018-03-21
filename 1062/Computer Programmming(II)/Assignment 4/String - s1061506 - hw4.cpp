@@ -122,7 +122,7 @@ string& string::assign( const char *s, size_t n )
 {
    resize(n);
    for (auto it = begin(); it != end();)
-	   *it++ = *s++;
+      *it++ = *s++;
    return *this;
 }
 
