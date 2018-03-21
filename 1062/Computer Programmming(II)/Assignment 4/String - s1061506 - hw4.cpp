@@ -159,14 +159,13 @@ string string::substr( size_t pos, size_t len) const
    return string();
 }
 
-int string::compare( const string& str ) const
+int string::compare(const string& str) const
 {
    if (size() <= str.size()) {
-      auto i { 0u };
-      for(; i < size(); ++i)
+      for (auto i{ 0u }; i < size(); ++i)
          if ((*this)[i] != str[i])
-            return static_cast<int>((*this)[i]) - str[i];
-      return i == str.size() ? 0 : -1;
+            return (*this)[i] - str[i];
+      return size() == str.size() ? 0 : -1;
    }
    else
       return -str.compare(*this);
