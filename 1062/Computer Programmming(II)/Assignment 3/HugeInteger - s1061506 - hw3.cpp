@@ -40,29 +40,6 @@ const HugeInteger &HugeInteger::assign( const HugeInteger &right )
    return *this; // enables x = y = z, for example
 }
 
-bool HugeInteger::equal( const HugeInteger &right ) const
-{
-   if (integer.size() == right.integer.size())
-      return std::equal(integer.begin(), integer.end(), right.integer.begin());
-
-   return false;
-}
-
-bool HugeInteger::less( const HugeInteger &right ) const
-{
-   auto& op1 = integer;
-   auto& op2 = right.integer;
-   if (op1.size() != op2.size())
-      return op1.size() < op2.size();
-
-   auto it1{ op1.end() }, it2{ op2.end() };
-   for (; it1 != op1.begin(); --it1, --it2)
-      if (it1[-1] != it2[-1])
-         return it1[-1] < it2[-1];
-
-   return false;
-}
-
 // function that tests if one HugeInteger is less than or equal to another
 bool HugeInteger::lessEqual( const HugeInteger &right ) const
 {
@@ -99,6 +76,80 @@ HugeInteger HugeInteger::add( const HugeInteger &op2 ) const
 
    return sum;
 } // end function add
+
+// modulus operator; HugeInteger % HugeInteger provided that op2 is not zero
+HugeInteger HugeInteger::modulus( const HugeInteger &op2 ) const
+{
+   HugeInteger quotient = divide( op2 );
+   HugeInteger product = quotient.multiply( op2 );
+   HugeInteger remainder = subtract( product );
+   return remainder;
+}
+
+// convert a vector of decimal digits into a HugeInteger
+void HugeInteger::convert( vector v )
+{
+   integer.resize( v.size() );
+   vector::iterator it1 = integer.end() - 1;
+   vector::iterator it2 = v.begin();
+   for( ; it2 != v.end(); --it1, ++it2 )
+      *it1 = *it2;
+} // end function convert
+
+// function that tests if a HugeInteger is zero
+bool HugeInteger::isZero() const
+{
+   for( vector::iterator it = integer.begin(); it != integer.end(); ++it )
+      if ( *it != 0 )
+         return false;
+         
+   return true;
+}
+
+// function that divides a HugeInteger by 10; shift a HugeInteger one position to the right
+void HugeInteger::divideByTen()
+{
+   vector::iterator it = integer.begin();
+   vector::iterator it2 = it;
+   for( ++it2; it2 != integer.end(); ++it, ++it2 )
+      *it = *it2;
+   integer.pop_back();
+}
+
+// overloaded output operator
+void HugeInteger::output( ostream &outFile )
+{
+   vector::iterator it = integer.end() - 1;
+   for( ; it != integer.begin() - 1; --it )
+      if( *it < 10 )
+         outFile << *it;
+   outFile << endl;
+} // end function output
+
+
+
+bool HugeInteger::equal( const HugeInteger &right ) const
+{
+   if (integer.size() == right.integer.size())
+      return std::equal(integer.begin(), integer.end(), right.integer.begin());
+
+   return false;
+}
+
+bool HugeInteger::less( const HugeInteger &right ) const
+{
+   auto& op1 = integer;
+   auto& op2 = right.integer;
+   if (op1.size() != op2.size())
+      return op1.size() < op2.size();
+
+   auto it1{ op1.end() }, it2{ op2.end() };
+   for (; it1 != op1.begin(); --it1, --it2)
+      if (it1[-1] != it2[-1])
+         return it1[-1] < it2[-1];
+
+   return false;
+}
 
 HugeInteger HugeInteger::subtract( const HugeInteger &op2 ) const
 {
@@ -176,52 +227,3 @@ HugeInteger HugeInteger::divide( const HugeInteger &op2 ) const
 
    return quotient;
 }
-
-// modulus operator; HugeInteger % HugeInteger provided that op2 is not zero
-HugeInteger HugeInteger::modulus( const HugeInteger &op2 ) const
-{
-   HugeInteger quotient = divide( op2 );
-   HugeInteger product = quotient.multiply( op2 );
-   HugeInteger remainder = subtract( product );
-   return remainder;
-}
-
-// convert a vector of decimal digits into a HugeInteger
-void HugeInteger::convert( vector v )
-{
-   integer.resize( v.size() );
-   vector::iterator it1 = integer.end() - 1;
-   vector::iterator it2 = v.begin();
-   for( ; it2 != v.end(); --it1, ++it2 )
-      *it1 = *it2;
-} // end function convert
-
-// function that tests if a HugeInteger is zero
-bool HugeInteger::isZero() const
-{
-   for( vector::iterator it = integer.begin(); it != integer.end(); ++it )
-      if ( *it != 0 )
-         return false;
-         
-   return true;
-}
-
-// function that divides a HugeInteger by 10; shift a HugeInteger one position to the right
-void HugeInteger::divideByTen()
-{
-   vector::iterator it = integer.begin();
-   vector::iterator it2 = it;
-   for( ++it2; it2 != integer.end(); ++it, ++it2 )
-      *it = *it2;
-   integer.pop_back();
-}
-
-// overloaded output operator
-void HugeInteger::output( ostream &outFile )
-{
-   vector::iterator it = integer.end() - 1;
-   for( ; it != integer.begin() - 1; --it )
-      if( *it < 10 )
-         outFile << *it;
-   outFile << endl;
-} // end function output
