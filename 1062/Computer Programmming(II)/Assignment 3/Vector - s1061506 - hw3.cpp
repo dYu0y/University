@@ -12,28 +12,12 @@ vector::vector( unsigned int n )
 {
 } // end vector default constructor
 
-vector::vector( const vector &x )
-   : vector()
-{
-   assign(x);
-}
-
 // destructor; destroys the vector
 vector::~vector()
 {
    if( myFirst != nullptr )
       delete[] myFirst;
 } // end destructor
-
-const vector &vector::assign( const vector &x )
-{
-   if(&x != this) {
-      // reserve would be better
-      resize(x.size());
-      std::copy(x.myFirst, x.myLast, myFirst);
-   }
-   return *this;
-}
 
 int* vector::begin() const
 {
@@ -55,15 +39,6 @@ unsigned int vector::capacity() const
    return ( myEnd - myFirst );
 }
 
-void vector::push_back( const int val )
-{
-   if (myLast == myEnd)
-      resize(size() + 1);
-   else
-      ++myLast;
-   myLast[-1] = val;
-}
-
 // Removes the last element in the vector,
 // effectively reducing the container size by one.
 void vector::pop_back()
@@ -73,6 +48,33 @@ void vector::pop_back()
       --myLast;
       *myLast = int();
    }
+}
+
+// start here
+
+vector::vector( const vector &x )
+   : vector()
+{
+   assign(x);
+}
+
+const vector &vector::assign( const vector &x )
+{
+   if(&x != this) {
+      // reserve would be better
+      resize(x.size());
+      std::copy(x.myFirst, x.myLast, myFirst);
+   }
+   return *this;
+}
+
+void vector::push_back( const int val )
+{
+   if (myLast == myEnd)
+      resize(size() + 1);
+   else
+      ++myLast;
+   myLast[-1] = val;
 }
 
 void vector::resize( unsigned int n )
