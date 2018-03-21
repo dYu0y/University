@@ -16,6 +16,7 @@ void SourceLine::assign( const char *s, size_t n )
 }
 
 // start here
+// 目前只有按照 delComments -> delStrConst -> delCharConst 的順序呼叫才不會錯
 // delStrConst  會刪到//後的""
 // delCharConst 會刪到//後及""內的''
 //              先放置
