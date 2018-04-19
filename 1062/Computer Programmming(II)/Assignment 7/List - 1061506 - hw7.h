@@ -292,9 +292,9 @@ const list< T >& list< T >::operator=( const list< T > &x )
 template< typename T >
 void list< T >::resize( unsigned int n )
 {
-   std::function<void()> fn = [self = this](){ self->push_back(T()); };
+   std::function<void()> fn = [this](){ this->push_back(T()); }; // lambda
    if (n < size())
-      fn = [self = this](){ self->pop_back(); };
+      fn = [this](){ this->pop_back(); }; // lambda
    while (size() != n)
       fn();
 }
@@ -303,8 +303,8 @@ template< typename T >
 void list< T >::push_back( const T val )
 {
    auto tmp = new ListNode<T>{ myHead, val, myHead->prev };
-   myHead->prev->next = tmp;
-   myHead->prev = tmp;
+   myHead->prev = myHead->prev->next = tmp;
+   // myHead->prev = tmp;
    ++mySize;
 }
 
