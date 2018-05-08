@@ -16,7 +16,7 @@ public:
    using iterator = typename list<T>::iterator;
    using reverse_iterator = typename list<T>::reverse_iterator;
 
-   HugeInteger(); // default constructor; construct a HugeInteger with mySize 0
+   HugeInteger( unsigned int n = 0 ); // constructor; construct a zero HugeInteger with mySize n
 
    // copy constructor; constructs a HugeInteger with a copy of each of the elements in integerToCopy
    HugeInteger( const HugeInteger &integerToCopy );
@@ -27,9 +27,8 @@ public:
    const HugeInteger &operator=( const list<T> &right ); // assignment operator
 
    bool operator< ( HugeInteger const&right ) const;  // less than
-   bool operator> ( HugeInteger const&right ) const;  // greater than
+
    bool operator<=( HugeInteger const&right ) const; // less than or equal to
-   bool operator>=( HugeInteger const&right ) const; // greater than or equal to
 
    // addition operator; HugeInteger + HugeInteger
    HugeInteger operator+( HugeInteger const& op2 ) const;
@@ -60,21 +59,13 @@ public:
    bool isZero() const; // return true if and only if all digits are zero
 
 private:
-   HugeInteger( unsigned int n ); // constructor; construct a zero HugeInteger with mySize n
+
    void divideByTen();            // divides a HugeInteger by 10
    void helpIncrement();          // increments a HugeInteger by 1
    void helpDecrement();          // decrements a HugeInteger by 1
 }; // end class template HugeInteger
 
 #endif
-
-
-// default constructor; construct a HugeInteger with mySize 0
-template< typename T >
-HugeInteger< T >::HugeInteger()
-   : list<T>( 1 )
-{
-}
 
 // constructor; construct a zero HugeInteger with mySize n
 template< typename T >
@@ -118,25 +109,11 @@ const HugeInteger< T > &HugeInteger< T >::operator=( const list< T > &right )
    return *this; // enables x = y = z, for example
 } // end function operator=
 
-// function to test if one HugeInteger< T > is greater than another
-template< typename T >
-bool HugeInteger< T >::operator>( HugeInteger< T > const &right ) const
-{
-   return ( right < *this );
-}
-
 // function that tests if one HugeInteger< T > is less than or equal to another
 template< typename T >
 bool HugeInteger< T >::operator<=( HugeInteger< T > const &right ) const
 {
    return ( *this == right || *this < right );
-}
-
-// function that tests if one HugeInteger< T > is greater than or equal to another
-template< typename T >
-bool HugeInteger< T >::operator>=( HugeInteger< T > const &right ) const
-{
-   return ( !( *this < right ) );
 }
 
 // addition operator; HugeInteger< T > + HugeInteger< T >
@@ -180,6 +157,46 @@ HugeInteger< T > HugeInteger< T >::operator%( HugeInteger< T > const& op2 ) cons
    HugeInteger quotient = ( *this ) / op2;
    HugeInteger remainder = ( *this ) - ( quotient * op2 );
    return remainder;
+}
+
+// overloaded prefix increment operator 
+template< typename T >
+HugeInteger< T > &HugeInteger< T >::operator++()
+{
+   helpIncrement(); // increment integer
+   return *this; // reference return to create an lvalue
+}
+
+// overloaded postfix increment operator;
+// note that the dummy integer parameter does not have a parameter name
+template< typename T >
+HugeInteger< T > HugeInteger< T >::operator++( int )
+{
+   HugeInteger< T > temp = *this; // hold current state of object
+   helpIncrement();
+
+   // return unincremented, saved, temporary object
+   return temp; // value return; not a reference return
+}
+
+// overloaded prefix decrement operator 
+template< typename T >
+HugeInteger< T > &HugeInteger< T >::operator--()
+{
+   helpDecrement(); // increment integer
+   return *this; // reference return to create an lvalue
+}
+
+// overloaded postfix decrement operator;
+// note that the dummy integer parameter does not have a parameter name
+template< typename T >
+HugeInteger< T > HugeInteger< T >::operator--( int )
+{
+   HugeInteger temp = *this; // hold current state of object
+   helpDecrement();
+
+   // return unincremented, saved, temporary object
+   return temp; // value return; not a reference return
 }
 
 // function that tests if a HugeInteger is zero
@@ -226,17 +243,6 @@ void HugeInteger< T >::helpIncrement()
       --it;
       *it = 1;
    }
-}
-
-// function to help decrement the integer
-template< typename T >
-void HugeInteger< T >::helpDecrement()
-{
-   iterator it = this->begin();
-   for( ; *it == 0; ++it )
-      *it = 9;
-
-   ( *it )--;
 }
 
 // overloaded output operator for class HugeInteger
@@ -292,30 +298,19 @@ HugeInteger<T> HugeInteger<T>::operator*( HugeInteger const& op2 ) const
 {
    if (isZero() || op2.isZero())
       return HugeInteger<T>{};
-   auto const* fwInt = this;
-   auto const* bwInt = &op2;
-   HugeInteger<T> product{ fwInt->size() + bwInt->size() };
 
-   auto fwIt = fwInt->begin(); // foward_iterator
-   auto bwIt = bwInt->begin(); // backward_iterator
+   HugeInteger<T> product{ this->size() + op2.size() };
+
+   auto it1 = this->begin();
+   for (auto it0 = product.begin(); it1 != this->end(); ++it1, ++it0)
+      for (auto it = it0, it2 = op2.begin(); it2 != op2.end(); ++it, ++it2)
+         *it += *it1 * *it2;
+
    auto carry = 0;
-   for (auto it = product.begin(); it != product.end(); ++it) {
-      for (; fwIt != fwInt->end(); ++fwIt, --bwIt) {
-         *it += *fwIt * *bwIt;
-
-         if (fwIt == --fwInt->end()) {
-            std::swap(fwIt, ++bwIt);
-            break;
-         }
-         else if (bwIt == bwInt->begin()) {
-            std::swap(++fwIt, bwIt);
-            break;
-         }
-      }
-      std::swap(fwInt, bwInt);
-      *it += carry;
-      carry = *it / 10;
-      *it %= 10;
+   for (auto& i : product) {
+      i += carry;
+      carry = i / 10;
+      i %= 10;
    }
 
    if (!*product.rbegin())
@@ -327,7 +322,7 @@ HugeInteger<T> HugeInteger<T>::operator*( HugeInteger const& op2 ) const
 template<typename T>
 HugeInteger<T> HugeInteger<T>::operator/( HugeInteger const& op2 ) const
 {
-   if(*this < op2)
+   if (*this < op2)
       return HugeInteger<T>{};
    auto dividend = HugeInteger<T>{ *this };
    auto divisor = HugeInteger<T>{ this->size() };
@@ -352,32 +347,12 @@ HugeInteger<T> HugeInteger<T>::operator/( HugeInteger const& op2 ) const
    return quotient;
 }
 
-template<typename T>
-HugeInteger<T>& HugeInteger<T>::operator++()
+// function to help decrement the integer
+template< typename T >
+void HugeInteger< T >::helpDecrement()
 {
-   helpIncrement();
-   return *this;
-}
-
-template<typename T>
-HugeInteger<T>  HugeInteger<T>::operator++( int )
-{
-   auto tmp = HugeInteger<T>{ *this };
-   ++*this;
-   return tmp;
-}
-
-template<typename T>
-HugeInteger<T>& HugeInteger<T>::operator--()
-{
-   helpDecrement();
-   return *this;
-}
-
-template<typename T>
-HugeInteger<T>  HugeInteger<T>::operator--( int )
-{
-   auto tmp = HugeInteger<T>{ *this };
-   --*this;
-   return tmp;
+   iterator it = this->begin();
+   while(!*it)
+      *it = 9, ++it;
+   --*it;
 }
