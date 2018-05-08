@@ -2,10 +2,10 @@
 #ifndef HUGEINTEGER_H
 #define HUGEINTEGER_H
 
-//#include "List - 1061506 - hw7.h" // include definition of class template list
+#include "List - studentID - hw8.h" // include definition of class template list
 
-#include <list> // include definition of class template list
-using std::list;
+// #include <list> // include definition of class template list
+// using std::list;
 
 template< typename T >
 class HugeInteger : public list< T >
@@ -14,11 +14,9 @@ class HugeInteger : public list< T >
    friend ostream &operator<<( ostream &output, HugeInteger< T > const &hugeInteger );
 public:
    using iterator = typename list<T>::iterator;
-   using const_iterator = typename list<T>::const_iterator;
    using reverse_iterator = typename list<T>::reverse_iterator;
-   using const_reverse_iterator = typename list<T>::const_reverse_iterator;
 
-   HugeInteger(); // default constructor; construct a HugeInteger with mySize 0
+   HugeInteger( unsigned int n = 0 ); // constructor; construct a zero HugeInteger with mySize n
 
    // copy constructor; constructs a HugeInteger with a copy of each of the elements in integerToCopy
    HugeInteger( const HugeInteger &integerToCopy );
@@ -29,9 +27,8 @@ public:
    const HugeInteger &operator=( const list<T> &right ); // assignment operator
 
    bool operator< ( HugeInteger const&right ) const;  // less than
-   bool operator> ( HugeInteger const&right ) const;  // greater than
+
    bool operator<=( HugeInteger const&right ) const; // less than or equal to
-   bool operator>=( HugeInteger const&right ) const; // greater than or equal to
 
    // addition operator; HugeInteger + HugeInteger
    HugeInteger operator+( HugeInteger const& op2 ) const;
@@ -62,21 +59,13 @@ public:
    bool isZero() const; // return true if and only if all digits are zero
 
 private:
-   HugeInteger( unsigned int n ); // constructor; construct a zero HugeInteger with mySize n
+
    void divideByTen();            // divides a HugeInteger by 10
    void helpIncrement();          // increments a HugeInteger by 1
    void helpDecrement();          // decrements a HugeInteger by 1
 }; // end class template HugeInteger
 
 #endif
-
-
-// default constructor; construct a HugeInteger with mySize 0
-template< typename T >
-HugeInteger< T >::HugeInteger()
-   : list<T>( 1 )
-{
-}
 
 // constructor; construct a zero HugeInteger with mySize n
 template< typename T >
@@ -120,25 +109,11 @@ const HugeInteger< T > &HugeInteger< T >::operator=( const list< T > &right )
    return *this; // enables x = y = z, for example
 } // end function operator=
 
-// function to test if one HugeInteger< T > is greater than another
-template< typename T >
-bool HugeInteger< T >::operator>( HugeInteger< T > const &right ) const
-{
-   return ( right < *this );
-}
-
 // function that tests if one HugeInteger< T > is less than or equal to another
 template< typename T >
 bool HugeInteger< T >::operator<=( HugeInteger< T > const &right ) const
 {
    return ( *this == right || *this < right );
-}
-
-// function that tests if one HugeInteger< T > is greater than or equal to another
-template< typename T >
-bool HugeInteger< T >::operator>=( HugeInteger< T > const &right ) const
-{
-   return ( !( *this < right ) );
 }
 
 // addition operator; HugeInteger< T > + HugeInteger< T >
@@ -150,12 +125,12 @@ HugeInteger< T > HugeInteger< T >::operator+( HugeInteger< T > const& op2 ) cons
    unsigned int sumSize = ( op1Size >= op2Size ) ? op1Size + 1 : op2Size + 1;
 
    HugeInteger< T > sum( sumSize );
-   const_iterator it1 = this->begin();
+   iterator it1 = this->begin();
    iterator it3 = sum.begin();
    for( ; it1 != this->end(); ++it1, ++it3 )
       *it3 = *it1;
 
-   const_iterator it2 = op2.begin();
+   iterator it2 = op2.begin();
    it3 = sum.begin();
    for( ; it2 != op2.end(); ++it2, ++it3 )
       *it3 += *it2;
@@ -184,11 +159,51 @@ HugeInteger< T > HugeInteger< T >::operator%( HugeInteger< T > const& op2 ) cons
    return remainder;
 }
 
+// overloaded prefix increment operator 
+template< typename T >
+HugeInteger< T > &HugeInteger< T >::operator++()
+{
+   helpIncrement(); // increment integer
+   return *this; // reference return to create an lvalue
+}
+
+// overloaded postfix increment operator;
+// note that the dummy integer parameter does not have a parameter name
+template< typename T >
+HugeInteger< T > HugeInteger< T >::operator++( int )
+{
+   HugeInteger< T > temp = *this; // hold current state of object
+   helpIncrement();
+
+   // return unincremented, saved, temporary object
+   return temp; // value return; not a reference return
+}
+
+// overloaded prefix decrement operator 
+template< typename T >
+HugeInteger< T > &HugeInteger< T >::operator--()
+{
+   helpDecrement(); // increment integer
+   return *this; // reference return to create an lvalue
+}
+
+// overloaded postfix decrement operator;
+// note that the dummy integer parameter does not have a parameter name
+template< typename T >
+HugeInteger< T > HugeInteger< T >::operator--( int )
+{
+   HugeInteger temp = *this; // hold current state of object
+   helpDecrement();
+
+   // return unincremented, saved, temporary object
+   return temp; // value return; not a reference return
+}
+
 // function that tests if a HugeInteger is zero
 template< typename T >
 bool HugeInteger< T >::isZero() const
 {
-   for(const_iterator it = this->begin(); it != this->end(); ++it )
+   for(iterator it = this->begin(); it != this->end(); ++it )
       if( *it != 0 )
          return false;
 
@@ -230,22 +245,11 @@ void HugeInteger< T >::helpIncrement()
    }
 }
 
-// function to help decrement the integer
-template< typename T >
-void HugeInteger< T >::helpDecrement()
-{
-   iterator it = this->begin();
-   for( ; *it == 0; ++it )
-      *it = 9;
-
-   ( *it )--;
-}
-
 // overloaded output operator for class HugeInteger
 template< typename T >
 ostream &operator<<( ostream &output, HugeInteger< T > const& hugeInteger )
 {
-   typename list< T >::const_reverse_iterator it = hugeInteger.rbegin();
+   typename list< T >::reverse_iterator it = hugeInteger.rbegin();
    for( ; it != hugeInteger.rend(); ++it )
       if( *it < 10 )
          output << *it;
@@ -260,47 +264,30 @@ ostream &operator<<( ostream &output, HugeInteger< T > const& hugeInteger )
 template<typename T>
 bool HugeInteger<T>::operator<( HugeInteger const& right ) const
 {
-   
+
 }
 
 template<typename T>
 HugeInteger<T> HugeInteger<T>::operator-( HugeInteger const& op2 ) const
 {
-   
+
 }
 
 template<typename T>
 HugeInteger<T> HugeInteger<T>::operator*( HugeInteger const& op2 ) const
 {
-   
+
 }
 
 template<typename T>
 HugeInteger<T> HugeInteger<T>::operator/( HugeInteger const& op2 ) const
 {
-   
+
 }
 
-template<typename T>
-HugeInteger<T>& HugeInteger<T>::operator++()
+// function to help decrement the integer
+template< typename T >
+void HugeInteger< T >::helpDecrement()
 {
-   
-}
 
-template<typename T>
-HugeInteger<T>  HugeInteger<T>::operator++( int )
-{
-   
-}
-
-template<typename T>
-HugeInteger<T>& HugeInteger<T>::operator--()
-{
-   
-}
-
-template<typename T>
-HugeInteger<T>  HugeInteger<T>::operator--( int )
-{
-   
 }
