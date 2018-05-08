@@ -329,7 +329,7 @@ bool operator==( const list< T > &lhs, const list< T > &rhs )
    if(lhs.size() != rhs.size())
       return false;
 
-   const auto* it = rhs.begin();
+   ListIterator<const T> it = rhs.begin();
    for(auto& i : lhs) {
       if(i != *it)
          return false;
