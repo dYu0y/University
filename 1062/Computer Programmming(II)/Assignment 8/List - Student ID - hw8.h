@@ -66,7 +66,7 @@ public:
    }
 
 private:
-   ListNode< T > *ptr; // keep a pointer to list
+   ListNode< T > *ptr = nullptr; // keep a pointer to list
 }; // end class template ListIterator
 
 
@@ -151,13 +151,10 @@ public:
    // Returns the number of elements in the list container.
    unsigned int size() const;
 
-   // Resizes the list container so that it contains n elements.
-   // If n is smaller than the current list container mySize,
-   // the content is reduced to its first n elements, removing those beyond.
-   // If n is greater than the current list container mySize,
-   // the content is expanded by inserting at the end
-   // as many elements as needed to reach a mySize of n.
-   void resize( unsigned int n );
+   // Inserts a new element at the beginning of the list, right before its current first element.
+   // The content of val is copied (or moved) to the inserted element.
+   // This effectively increases the list size by one.
+   void push_front( const T& val );
 
    // Adds a new element at the end of the list container,
    // after its current last element.
@@ -165,11 +162,17 @@ public:
    // This effectively increases the container size by one.
    void push_back( const T& val );
 
-   void push_front( const T& val );
-
    // Removes the last element in the list container,
    // effectively reducing the container size by one.
    void pop_back();
+
+   // Resizes the list container so that it contains n elements.
+   // If n is smaller than the current list container mySize,
+   // the content is reduced to its first n elements, removing those beyond.
+   // If n is greater than the current list container mySize,
+   // the content is expanded by inserting at the end
+   // as many elements as needed to reach a mySize of n.
+   void resize( unsigned int n );
 
    // Removes all elements from the list container (which are destroyed).
    void clear();
@@ -256,9 +259,9 @@ bool operator!=( const list< T > &lhs, const list< T > &rhs )
 // in the same order.
 template< typename T >
 list< T >::list( const list< T > &x )
-   : 
+   : list()
 {
-   
+
 }
 
 // Assigns new contents to the container, replacing its current contents,
@@ -266,38 +269,38 @@ list< T >::list( const list< T > &x )
 template< typename T >
 const list< T >& list< T >::operator=( const list< T > &x )
 {
-   
+
 } // end function operator=
 
 template< typename T >
-void list< T >::resize( unsigned int n )
+void list< T >::push_front( const T& val )
 {
-   
+
 }
 
 template< typename T >
 void list< T >::push_back( const T& val )
 {
-   
-}
 
-template< typename T >
-void list< T >::push_front( const T& val )
-{
-   
 }
 
 template< typename T >
 void list< T >::pop_back()
 {
-   
+
+}
+
+template< typename T >
+void list< T >::resize( unsigned int n )
+{
+
 }
 
 // determine if two lists are equal and return true, otherwise return false
 template< typename T >
 bool operator==( const list< T > &lhs, const list< T > &rhs )
 {
-   
+
 }
 
 #endif
