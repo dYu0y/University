@@ -89,13 +89,11 @@ typename unordered_set< T >::iterator unordered_set< T >::find( const T &k )
    auto it = myVec[buck_num];
    auto buck_end_ = myVec[buck_num + 1];
 
-   if(it != myList.end()) {  
-      ++buck_end_;
-      for(; it != buck_end_; ++it)
+   if(it != myList.end())
+      for(++buck_end_; it != buck_end_; ++it)
          if(*it == k)
-            return it;
-   }
-   return myList.end();
+            break;
+   return it;
 }
 
 template< typename T >
