@@ -29,7 +29,8 @@ template< typename Kty >
 bool equalTree( unsigned int *node1, unsigned int *head1,
                 unsigned int *node2, unsigned int *head2 );
 //#define debug_
-#define debug_2_
+//#define debug_2
+//#define debug_3
 int main()
 {
    unsigned int numKeys = 1000;
@@ -52,8 +53,8 @@ int main()
 //   unsigned int *head2;
 //   unsigned int *root2;
       unsigned int count = 0;
-	  unsigned int *head2;
-	  unsigned int *root2;
+     unsigned int *head2;
+     unsigned int *root2;
       for( unsigned int i = 0; i < numKeys; i++ )
       {
          switch( rand() % 3 )
@@ -65,8 +66,8 @@ int main()
             set2.insert( keys[ count ] );
             count++;
 /*
-			head2 = *( reinterpret_cast< unsigned int ** >( &set2 ) );
-			root2 = *( reinterpret_cast< unsigned int ** >( head2 + 1 ) );
+            head2 = *( reinterpret_cast< unsigned int ** >( &set2 ) );
+            root2 = *( reinterpret_cast< unsigned int ** >( head2 + 1 ) );
 
             cout << "Preorder sequence:\n";
             preorder< unsigned int >( root2, head2 );
@@ -81,16 +82,16 @@ int main()
             {
                unsigned int k = rand() % count;
 #ifdef debug_2
-			   cout << "erase " << setw(5) << keys[k] << endl;
+            cout << "erase " << setw(5) << keys[k] << endl;
 #endif // debug_2
-			   if (keys[k] == 1300)
-				   cout.fail();
+            if (keys[k] == 1300)
+               cout.fail();
                set1.erase( keys[ k ] );
                set2.erase( keys[ k ] );
 
-			   for (unsigned int j = k + 1; j < numKeys; j++)
-				   keys[j - 1] = keys[j];
-			   count--;
+            for (unsigned int j = k + 1; j < numKeys; j++)
+               keys[j - 1] = keys[j];
+            count--;
 /*
                head2 = *( reinterpret_cast< unsigned int ** >( &set2 ) );
                root2 = *( reinterpret_cast< unsigned int ** >( head2 + 1 ) );
@@ -105,11 +106,11 @@ int main()
             }
          }
 
-		 if (equal(set1, set2))
-			 numErrors--;
+       if (equal(set1, set2))
+          numErrors--;
 #ifdef debug_3
-		 else
-			 set2.twoTraversals();
+       else
+          set2.twoTraversals();
 #endif // debug_2
       }
 
@@ -196,8 +197,8 @@ bool equalTree( unsigned int *node1, unsigned int *head1,
    Kty myVal1 = static_cast< Kty >( *( node1 + 4 ) );
    Kty myVal2 = static_cast< Kty >( *( node2 + 5 ) );
 #ifdef debug_
-	cout << "myVal1  " << myVal1 << endl;
-	cout << "myVal2  " << myVal2 << endl;
+   cout << "myVal1  " << myVal1 << endl;
+   cout << "myVal2  " << myVal2 << endl;
 #endif // debug_
    if( myVal1 != myVal2 )
       return false;
@@ -205,8 +206,8 @@ bool equalTree( unsigned int *node1, unsigned int *head1,
    unsigned int color1 = *( node1 + 3 ) % 256;
    unsigned int color2 = *( node2 + 3 );
 #ifdef debug_
-	cout << "color1  " << color1 << endl;
-	cout << "color2  " << color2 << endl;
+   cout << "color1  " << color1 << endl;
+   cout << "color2  " << color2 << endl;
 #endif // debug_
    if( color1 != color2 )
       return false;
