@@ -177,6 +177,7 @@ void set< Kty >::clear( TreeNode< Kty > *node )
 template< typename Kty >
 void set< Kty >::reBalance( TreeNode< Kty > *node )
 {
+   // p = parent, g = grandparent, u = uncle = parent's sibling
    TreeNode< Kty > *p = node->parent, *g = p->parent, *u;
    // node == root
    if (p == myHead)
@@ -219,6 +220,7 @@ void set< Kty >::reBalance( TreeNode< Kty > *node )
 template< typename Kty >
 void set< Kty >::LLRotation( TreeNode< Kty > *p )
 {
+   // g = grandparent, gg = grandparent's parent
    TreeNode< Kty > *g = p->parent, *gg = g->parent;
    p->parent = gg;
    g->parent = p;
