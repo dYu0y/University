@@ -206,12 +206,12 @@ void set< Kty >::reBalance( TreeNode< Kty > *node )
       // LRb
       else if (p == g->left && node == p->right) {
          std::swap(node->color, g->color);
-         LRRotation(p);
+         LRRotation(p->right);
       }
       // RLb
       else if (p == g->right && node == p->left) {
          std::swap(node->color, g->color);
-         RLRotation(p);
+         RLRotation(p->left);
       }
    }
 }
@@ -240,7 +240,6 @@ void set< Kty >::LLRotation( TreeNode< Kty > *p )
 template< typename Kty >
 void set< Kty >::LRRotation( TreeNode< Kty > *node )
 {
-   node = node->right;
    RRRotation(node);
    LLRotation(node);
 }
@@ -249,7 +248,6 @@ void set< Kty >::LRRotation( TreeNode< Kty > *node )
 template< typename Kty >
 void set< Kty >::RLRotation( TreeNode< Kty > *node )
 {
-   node = node->left;
    LLRotation(node);
    RRRotation(node);
 }
