@@ -38,7 +38,9 @@ while(std::getline(std::cin, data) && data != ".")
 信件內容輸入結束時請以一行英文的句點作為結尾
 如下圖橘框處 (本圖擷取自 wiki)
 ![](https://i.imgur.com/12iLXbO.png)
+
 以下是信件內容的範例
+
 > Hello,
 > This is a test.
 > Goodbye.
