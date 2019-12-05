@@ -40,9 +40,9 @@ while(std::getline(std::cin, data) && data != ".")
 ![](https://i.imgur.com/12iLXbO.png)
 
 以下是信件內容的範例
-
-> Hello,
-> This is a test.
-> Goodbye.
-> .
-> 
+```
+Hello,
+This is a test.
+Goodbye.
+.
+```
